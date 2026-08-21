@@ -1,0 +1,15 @@
+node_modules
+**/node_modules
+**/dist
+**/coverage
+.turbo
+**/.turbo
+.git
+.github
+*.sqlite
+*.sqlite-journal
+sbom.json
+.env
+.env.*
+!.env.example
+.payguard-halt

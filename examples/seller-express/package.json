@@ -1,0 +1,22 @@
+{
+  "name": "@payguard/example-seller-express",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/server.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@payguard/core": "workspace:*",
+    "@payguard/rails": "workspace:*",
+    "@payguard/server": "workspace:*",
+    "@payguard/store": "workspace:*",
+    "express": "5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.6",
+    "tsx": "4.23.12",
+    "typescript": "5.9.3"
+  }
+}

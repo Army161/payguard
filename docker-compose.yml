@@ -1,0 +1,45 @@
+# PayGuard in reverse proxy mode, in front of a service you would rather not modify.
+#
+# Nothing here holds a key. `payguard protect` verifies settlement and forwards; the buyer signs
+# somewhere else entirely.
+services:
+  redis:
+    image: redis:7-alpine
+    # Persistence off: everything PayGuard stores in Redis has a TTL and is reconstructible from
+    # the chain and the audit log. Turn it on if you want the audit chain in Redis to survive a
+    # restart, or point the audit store at SQLite instead.
+    command: ['redis-server', '--save', '', '--appendonly', 'no']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  payguard:
+    build: .
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      # Refused unless explicitly set to "true", and it should stay unset until the audit is done.
+      PAYGUARD_ALLOW_MAINNET: 'false'
+      REDIS_URL: redis://redis:6379
+      BASE_RPC_URL: ${BASE_RPC_URL:-https://sepolia.base.org}
+      SELLER_ADDRESS_BASE: ${SELLER_ADDRESS_BASE:?set your seller address}
+      # Credentials come from the environment, never from a config file baked into the image.
+      COINBASE_CDP_API_KEY_ID: ${COINBASE_CDP_API_KEY_ID:-}
+      COINBASE_CDP_API_KEY_SECRET: ${COINBASE_CDP_API_KEY_SECRET:-}
+    command:
+      - protect
+      - ${UPSTREAM_URL:-http://upstream:3000}
+      - --config
+      - /app/payguard.config.ts
+      - --port
+      - '4402'
+    ports:
+      - '4402:4402'
+    volumes:
+      # Your config, mounted read only. It contains no secrets, so this is safe to bake into a
+      # deployment or to mount from a ConfigMap.
+      - ./payguard.config.ts:/app/payguard.config.ts:ro

@@ -69,6 +69,50 @@ importers:
         specifier: 15.0.0
         version: 15.0.0
 
+  examples/buyer-agent:
+    dependencies:
+      '@payguard/client':
+        specifier: workspace:*
+        version: link:../../packages/client
+      '@payguard/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+    devDependencies:
+      tsx:
+        specifier: 4.23.12
+        version: 4.23.12
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
+  examples/seller-express:
+    dependencies:
+      '@payguard/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@payguard/rails':
+        specifier: workspace:*
+        version: link:../../packages/rails
+      '@payguard/server':
+        specifier: workspace:*
+        version: link:../../packages/server
+      '@payguard/store':
+        specifier: workspace:*
+        version: link:../../packages/store
+      express:
+        specifier: 5.2.1
+        version: 5.2.1
+    devDependencies:
+      '@types/express':
+        specifier: 5.0.6
+        version: 5.0.6
+      tsx:
+        specifier: 4.23.12
+        version: 4.23.12
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
   packages/client:
     dependencies:
       '@payguard/core':

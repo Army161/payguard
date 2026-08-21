@@ -1,6 +1,6 @@
 # tasks.md - mirror of build_v1.md checkboxes; agents tick here and log in memory.md
 
-Current phase: 6 complete. Blockers: see BLOCKERS below.
+Current phase: 7 complete. Blockers: see BLOCKERS below.
 
 ## Phase 0 - Repo
 

@@ -1,0 +1,18 @@
+{
+  "name": "@payguard/example-buyer-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/agent.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@payguard/client": "workspace:*",
+    "@payguard/core": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "4.23.12",
+    "typescript": "5.9.3"
+  }
+}

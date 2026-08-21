@@ -151,3 +151,25 @@ scripted facilitator now refuses an all-zero signature and the audit marker, the
 refuses an unsigned payload.
 2026-08-21 audit exit codes: 0 everything blocked, 1 something vulnerable, 2 nothing vulnerable but
 something inconclusive. An unreachable endpoint must not look like a clean bill of health in CI.
+2026-08-21 Phase 7 done. README, timed quickstart, threat model, compliance posture, Dockerfile,
+docker-compose, and both example apps. All six packages pass npm pack --dry-run.
+2026-08-21 The threat model documents residual risk for every control rather than only the control.
+A threat model that lists only what is defended reads as marketing; the useful part is where the
+line is. Ten classes covered, with the v1 gaps listed explicitly at the end (no identity rate
+limiting, no external anchoring of audit chain heads, screening hooks not implemented, hosted
+gateway is slice 2, audit probes are unsigned so they cannot verify settlement checking).
+2026-08-21 The compliance posture document states the non-custodial claim as properties of the code
+that a reader can check: the Signer interface has two methods and neither returns key material, no
+package imports a key derivation library, and RawKeySigner does not accept a private key at all.
+Also states plainly that it is not legal advice and that counsel has not reviewed it.
+2026-08-21 Docker could not be built here (no daemon), logged as blocker 1. Rather than assert the
+NFR-6 size target on faith, scripts/image-size.sh reproduces the Dockerfile's prune exactly and
+measures it: 101 MB of runtime payload, and the pruned tree still passes payguard simulate.
+2026-08-21 The prod install for the image excludes optional peers (express, hono, fastify,
+better-sqlite3, ioredis) and then removes TypeScript, which viem, zod and abitype declare as an
+optional peer for type-level features only and which is 23 MB of pure dead weight at runtime. That
+took the payload from 175 MB to 101 MB.
+2026-08-21 The quickstart is timed with real measured numbers, 11 minutes of which 6 are faucet
+waiting, against the 30 minute target in spec.md FR-6.2. The 30 second no-account path
+(pnpm install, pnpm build, payguard simulate) is first, so a reader can decide whether to continue
+before creating any account.
