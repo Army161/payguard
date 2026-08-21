@@ -74,3 +74,33 @@ unimplemented adapters that throw a typed not_implemented error naming build_v1.
 unhealthy, so the router skips them during failover rather than routing payments into a dead end.
 2026-08-21 The health monitor does not count a facilitator's legitimate rejection (a malformed
 payload, a 400) against its breaker. Counting it would open the breaker on a buyer's mistake.
+2026-08-21 Phase 4 done. Seller middleware, 55 tests. AT-1, AT-2, AT-3, AT-4 and AT-8 are green.
+2026-08-21 The lifecycle lives in one framework-neutral handler, and Express, Hono, Fastify and
+the reverse proxy are transport only. The ordering is the security property: claim the nonce
+before verifying, verify before settling, settle before confirming, confirm before releasing. Any
+reordering reintroduces one of the documented attack classes, so it is written once rather than
+four times.
+2026-08-21 Failover rule on the seller side: a facilitator that says "this payload is invalid" has
+answered the question, so a rejection stops the loop. Only transport level failures move to the
+next facilitator. Retrying a rejection elsewhere is not failover, it is shopping for a yes, and it
+is how a bad payload eventually finds a lenient verifier. There is a test for this.
+2026-08-21 When settlement happened but did not match the expectation (wrong recipient, short
+payment), the nonce claim is deliberately NOT released. The money moved, so releasing the claim
+would let the same payload be presented again. The audit entry carries the transaction hash and a
+reconciliation note instead. Verification failures before settlement do release the claim, so an
+honest buyer can retry.
+2026-08-21 Correction during Phase 4: the first Fastify adapter was an ordinary encapsulated
+plugin, so its hooks never applied to routes registered on the parent instance and every request
+sailed through unguarded. Caught by driving a real Fastify server over a socket. Fixed by setting
+Symbol.for('skip-override') on the plugin, which is what fastify-plugin does, keeping the
+dependency count at zero. Also stopped awaiting reply.send() inside the onRequest hook: awaiting a
+Fastify reply waits for the response to flush, which deadlocks against the hook that returns it.
+2026-08-21 Express buffers the downstream response rather than streaming it, because FR-2.2
+requires a retry to replay the same bytes and bytes already flushed to a socket cannot be
+replayed. Documented in the adapter.
+2026-08-21 Dropped the `declare module 'express-serve-static-core'` augmentation. It leaks into
+every consumer's type graph whether or not they use PayGuard and fails to resolve for anyone with
+Express as a transitive dependency. Callers use payguardContext(request) instead.
+2026-08-21 A failing audit webhook is swallowed. The durable append already happened, and FR-5.3
+must not be able to take the payment path down with it. There is a test that a throwing onAudit
+still yields a settled outcome.

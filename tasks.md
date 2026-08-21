@@ -1,6 +1,6 @@
 # tasks.md - mirror of build_v1.md checkboxes; agents tick here and log in memory.md
 
-Current phase: 3 complete. Blockers: see BLOCKERS below.
+Current phase: 4 complete. Blockers: see BLOCKERS below.
 
 ## Phase 0 - Repo
 
@@ -28,10 +28,10 @@ Current phase: 3 complete. Blockers: see BLOCKERS below.
 
 ## Phase 4 - @payguard/server
 
-- [ ] Express middleware implementing lifecycle steps 1-7
-- [ ] Hono + Fastify adapters sharing core handler
-- [ ] Reverse-proxy mode
-- [ ] AT-1..AT-4, AT-8 green
+- [x] Express middleware implementing lifecycle steps 1-7
+- [x] Hono + Fastify adapters sharing core handler
+- [x] Reverse-proxy mode
+- [x] AT-1..AT-4, AT-8 green
 
 ## Phase 5 - @payguard/client
 
