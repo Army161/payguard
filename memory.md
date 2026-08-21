@@ -129,3 +129,25 @@ recorded as a completed spend and returned as success. Now only 2xx is reported 
 another rail. A 5xx is ambiguous about whether the payload settled, and paying again on another
 rail after an ambiguous failure is exactly the double charge FR-4.4 forbids. A non-2xx response is
 still recorded as spent, because a spend cap that under-counts is worse than one that over-counts.
+2026-08-21 Phase 6 done. CLI with init, protect, simulate and audit. 26 tests, including running
+the built binary as a subprocess so the wiring is covered rather than just the library functions.
+2026-08-21 `payguard simulate` runs all five attack classes against a real PayGuardServer with a
+scripted chain and facilitator. No wallet, no faucet, no network. It is the thirty second
+demonstration, and it exercises the same code path a deployment does rather than a parallel one.
+2026-08-21 `payguard audit` probes are unsigned and read only by design. An operator runs this
+against their own endpoint, so it must not be able to move money even by accident and must not
+need a funded wallet to be useful. The cost is that it cannot prove settlement is verified, only
+that the endpoint refuses what it should refuse, and every report says so in a Limits section.
+The forged payload carries a recognisable marker ("payguardaudit", all-zero signature) so an
+operator finding it in their logs can tell it apart from an attacker.
+2026-08-21 Two bugs found while testing the CLI:
+(a) runAudit skipped every probe when the seller produced no readable 402 body. That turned the
+single most important finding, an endpoint serving its resource for free and therefore having no
+accepts list at all, into five inconclusive rows. Probes that do not need the quote now always
+run.
+(b) The simulated facilitator accepted any payload, so `payguard audit` against
+`payguard protect --demo` correctly reported a vulnerability that existed only in the stub. The
+scripted facilitator now refuses an all-zero signature and the audit marker, the way a real one
+refuses an unsigned payload.
+2026-08-21 audit exit codes: 0 everything blocked, 1 something vulnerable, 2 nothing vulnerable but
+something inconclusive. An unreachable endpoint must not look like a clean bill of health in CI.

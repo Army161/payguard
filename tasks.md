@@ -1,6 +1,6 @@
 # tasks.md - mirror of build_v1.md checkboxes; agents tick here and log in memory.md
 
-Current phase: 5 complete. Blockers: see BLOCKERS below.
+Current phase: 6 complete. Blockers: see BLOCKERS below.
 
 ## Phase 0 - Repo
 
@@ -41,7 +41,7 @@ Current phase: 5 complete. Blockers: see BLOCKERS below.
 
 ## Phase 6 - apps/cli
 
-- [ ] init, protect, simulate (5 attack classes), audit report (markdown + JSON)
+- [x] init, protect, simulate (5 attack classes), audit report (markdown + JSON)
 
 ## Phase 7 - Docs + packaging
 
