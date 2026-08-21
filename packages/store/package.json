@@ -1,0 +1,46 @@
+{
+  "name": "@payguard/store",
+  "version": "0.1.0",
+  "description": "Nonce, idempotency, and audit stores for PayGuard (memory, SQLite, Redis)",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false --dry 2>/dev/null || tsc -b"
+  },
+  "dependencies": {
+    "@payguard/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "better-sqlite3": ">=11",
+    "ioredis": ">=5"
+  },
+  "peerDependenciesMeta": {
+    "better-sqlite3": {
+      "optional": true
+    },
+    "ioredis": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "better-sqlite3": "13.0.3",
+    "@types/better-sqlite3": "7.6.13",
+    "ioredis": "6.0.0"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "name": "@payguard/server",
+  "version": "0.1.0",
+  "description": "Seller-side x402 settlement-gated middleware for PayGuard",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false --dry 2>/dev/null || tsc -b"
+  },
+  "dependencies": {
+    "@payguard/core": "workspace:*",
+    "@payguard/rails": "workspace:*",
+    "@payguard/store": "workspace:*",
+    "zod": "4.4.3"
+  },
+  "peerDependencies": {
+    "express": ">=4",
+    "hono": ">=4",
+    "fastify": ">=5"
+  },
+  "peerDependenciesMeta": {
+    "express": {
+      "optional": true
+    },
+    "hono": {
+      "optional": true
+    },
+    "fastify": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "express": "5.2.1",
+    "@types/express": "5.0.6",
+    "hono": "4.13.3",
+    "fastify": "5.12.1"
+  }
+}

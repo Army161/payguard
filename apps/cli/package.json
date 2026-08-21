@@ -1,0 +1,37 @@
+{
+  "name": "@payguard/cli",
+  "version": "0.1.0",
+  "description": "PayGuard command line: init, protect, simulate, audit",
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": {
+    "payguard": "./dist/bin.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc -b"
+  },
+  "dependencies": {
+    "@payguard/client": "workspace:*",
+    "@payguard/core": "workspace:*",
+    "@payguard/rails": "workspace:*",
+    "@payguard/server": "workspace:*",
+    "@payguard/store": "workspace:*",
+    "commander": "15.0.0"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "@payguard/core",
+  "version": "0.1.0",
+  "description": "Pure policy engine, verifier contract, and hash-chained audit for PayGuard",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false --dry 2>/dev/null || tsc -b"
+  },
+  "dependencies": {
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "fast-check": "4.9.0"
+  },
+  "keywords": [
+    "x402",
+    "agent-payments",
+    "policy-engine",
+    "audit-log"
+  ]
+}

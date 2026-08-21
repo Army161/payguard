@@ -1,0 +1,35 @@
+{
+  "name": "@payguard/rails",
+  "version": "0.1.0",
+  "description": "Chain rails and x402 facilitator adapters for PayGuard",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false --dry 2>/dev/null || tsc -b"
+  },
+  "dependencies": {
+    "@payguard/core": "workspace:*",
+    "viem": "2.55.19",
+    "xrpl": "5.0.0",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "x402": "1.2.0"
+  }
+}

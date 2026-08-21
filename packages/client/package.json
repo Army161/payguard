@@ -1,0 +1,32 @@
+{
+  "name": "@payguard/client",
+  "version": "0.1.0",
+  "description": "Buyer-side local-signing x402 client with spend policy and kill switch",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false --dry 2>/dev/null || tsc -b"
+  },
+  "dependencies": {
+    "@payguard/core": "workspace:*",
+    "@payguard/rails": "workspace:*",
+    "@payguard/store": "workspace:*",
+    "zod": "4.4.3"
+  }
+}

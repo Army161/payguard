@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+.turbo/
+*.tsbuildinfo
+.env
+.env.local
+.env.*.local
+*.log
+sbom.json
+.payguard-halt
+*.sqlite
+*.sqlite-journal
+*.db
+.DS_Store

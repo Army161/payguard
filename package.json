@@ -1,0 +1,49 @@
+{
+  "name": "payguard",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Non-custodial agent-payment guardrail middleware for x402 across XRPL and Base",
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:live": "PAYGUARD_LIVE=1 vitest run",
+    "sbom": "cyclonedx-npm --output-file sbom.json --omit dev",
+    "changeset": "changeset",
+    "release": "changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "2.31.1",
+    "@eslint/js": "9.39.5",
+    "@types/node": "22.20.1",
+    "@typescript-eslint/eslint-plugin": "8.67.0",
+    "@typescript-eslint/parser": "8.67.0",
+    "@vitest/coverage-v8": "4.1.11",
+    "eslint": "9.39.5",
+    "eslint-config-prettier": "10.1.8",
+    "prettier": "3.9.6",
+    "tsx": "4.23.12",
+    "turbo": "2.10.11",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3",
+      "esbuild",
+      "keccak",
+      "bufferutil",
+      "utf-8-validate"
+    ]
+  },
+  "type": "module"
+}
