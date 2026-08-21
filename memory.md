@@ -26,3 +26,18 @@ denied; crossing the per-transaction cap always denies).
 require_human. Returning at the first hit would report whichever control happened to be checked
 first rather than the most severe one, and would let a large over-cap payment escalate to a human
 instead of being refused outright.
+2026-08-21 Phase 2 done. Three Store implementations behind one interface, all run against the
+same exported contract suite: memory, SQLite (better-sqlite3), Redis (ioredis). The Redis suite
+boots a real redis-server on a unix socket rather than testing a fake, and CI installs the binary
+so the same suite runs there.
+2026-08-21 Correction during Phase 2: the first Redis audit append used an optimistic
+read-compute-CAS retry loop. It failed the 30-concurrent-appender test, and correctly so. A hash
+chain is inherently sequential and Redis Lua has no sha256, so the link cannot be computed server
+side; with N concurrent appenders an optimistic loop only lets one win per round and does not
+converge. Replaced with a short lived distributed lock (SET NX PX plus a token-checked Lua
+unlock), keeping the compare-and-swap inside the append script as a second line of defence for a
+lock that expires under a stalled writer. Nonce claims stayed optimistic, because SET NX PX is a
+single atomic operation and needs no lock.
+2026-08-21 SQLite claim is one INSERT ... ON CONFLICT DO UPDATE ... WHERE expires_at <= now
+statement, so SQLite picks the winner. The audit append runs inside BEGIN IMMEDIATE, which takes
+the write lock up front; without IMMEDIATE two appenders can read the same tail and fork the chain.
