@@ -1,6 +1,6 @@
 # tasks.md - mirror of build_v1.md checkboxes; agents tick here and log in memory.md
 
-Current phase: 2 complete. Blockers: see BLOCKERS below.
+Current phase: 3 complete. Blockers: see BLOCKERS below.
 
 ## Phase 0 - Repo
 
@@ -21,10 +21,10 @@ Current phase: 2 complete. Blockers: see BLOCKERS below.
 
 ## Phase 3 - @payguard/rails
 
-- [ ] base:usdc verifier (viem, Base Sepolia); fixture + live test
-- [ ] xrpl:xrp and xrpl:rlusd verifier (xrpl.js, Testnet); fixture + live test
-- [ ] Facilitator adapters: coinbase, xrpl-t54 (v1); stripe, xpay stubs behind interface
-- [ ] Health + circuit breaker
+- [x] base:usdc verifier (viem, Base Sepolia); fixture + live test
+- [x] xrpl:xrp and xrpl:rlusd verifier (xrpl.js, Testnet); fixture + live test
+- [x] Facilitator adapters: coinbase, xrpl-t54 (v1); stripe, xpay stubs behind interface
+- [x] Health + circuit breaker
 
 ## Phase 4 - @payguard/server
 

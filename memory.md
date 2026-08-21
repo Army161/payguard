@@ -41,3 +41,36 @@ single atomic operation and needs no lock.
 2026-08-21 SQLite claim is one INSERT ... ON CONFLICT DO UPDATE ... WHERE expires_at <= now
 statement, so SQLite picks the winner. The audit append runs inside BEGIN IMMEDIATE, which takes
 the write lock up front; without IMMEDIATE two appenders can read the same tail and fork the chain.
+2026-08-21 Phase 3 done. Rails and facilitator adapters, 155 tests, plus a live suite that runs
+against real public testnets.
+2026-08-21 The x402 conformance tests pass against the pinned SDK's own zod schemas. PayGuard's
+hand-written wire format accepts and rejects exactly what x402 1.2.0 does for requirements,
+payloads, verify responses, and settle responses, and its network enum is a strict superset in the
+order the SDK declares. One deliberate divergence, asserted explicitly: PayGuard accepts any
+non-empty facilitator error reason string where the SDK pins an enum, because a facilitator that
+invents a reason should not crash a seller.
+2026-08-21 Base rail reads the ERC-20 Transfer log rather than trusting the receipt status. It
+groups transfers by recipient and reports the largest, never the sum across recipients: summing
+would let a payment split between the seller and an attacker look like a full payment.
+2026-08-21 XRPL rail reads meta.delivered_amount, not the Amount field. A partial payment delivers
+less than Amount claims, and reading Amount is exactly how a partial payment passes as a full one.
+Issued currency values are decimal strings, converted to atomic units with string arithmetic that
+refuses excess precision rather than rounding it away.
+2026-08-21 Architecture addition beyond design.md: the XRPL rail takes a pluggable transport,
+websocket (xrpl.js) or HTTPS JSON-RPC. Independent verification is the security critical path and
+many enterprise egress policies allow outbound HTTPS only. Forcing a websocket there would leave
+the seller choosing between no independent check and a hole in its egress policy. Both transports
+run the same rail code. Also handles both rippled response shapes: API v2 nests the transaction
+under tx_json, older JSON-RPC inlines it on the result.
+2026-08-21 Live testnet verification performed and pinned. Base Sepolia USDC transfer
+0x0394c657...113a0 decodes to recipient 0xf006A181...404B8 for 1000 atomic units and passes
+checkSettlement; the same observation is refused with chain_recipient_mismatch against a different
+expected seller. XRPL Testnet Payment 2B72C0CA...D8AB decodes to rKZaYLb4...jHpc for 100000000
+drops and passes; the same observation is refused with chain_asset_mismatch when the seller expects
+RLUSD. The XRPL fixture is the Testnet faucet funding a fresh account; its seed was discarded.
+2026-08-21 Facilitator adapters refuse a non-https URL and a URL with embedded credentials, which
+is the SSRF entry in design.md's threat model. Stripe and xpay are declared as explicitly
+unimplemented adapters that throw a typed not_implemented error naming build_v1.md and report
+unhealthy, so the router skips them during failover rather than routing payments into a dead end.
+2026-08-21 The health monitor does not count a facilitator's legitimate rejection (a malformed
+payload, a 400) against its breaker. Counting it would open the breaker on a buyer's mistake.

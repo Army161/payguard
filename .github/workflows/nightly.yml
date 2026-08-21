@@ -28,3 +28,6 @@ jobs:
           PAYGUARD_LIVE: '1'
           BASE_RPC_URL: ${{ vars.BASE_RPC_URL || 'https://sepolia.base.org' }}
           XRPL_WSS_URL: ${{ vars.XRPL_WSS_URL || 'wss://s.altnet.rippletest.net:51233' }}
+          # Set XRPL_RPC_URL as a repository variable to run the XRPL live tests over JSON-RPC
+          # instead, for runners whose egress policy allows https only.
+          XRPL_RPC_URL: ${{ vars.XRPL_RPC_URL }}
