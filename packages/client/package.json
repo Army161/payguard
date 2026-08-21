@@ -28,5 +28,10 @@
     "@payguard/rails": "workspace:*",
     "@payguard/store": "workspace:*",
     "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@payguard/server": "workspace:*",
+    "express": "5.2.1",
+    "@types/express": "5.0.6"
   }
 }

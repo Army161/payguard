@@ -60,13 +60,11 @@ export async function verifyAndSettle(
       verify = await facilitator.verify(payload, requirements);
       monitor.recordSuccess(facilitator.id);
     } catch (error) {
-      monitor.recordFailure(facilitator.id, error);
-      if (error instanceof FacilitatorError) {
-        attempts.push({ facilitatorId: facilitator.id, stage: 'verify', error });
-        if (error.isRetryableElsewhere) continue;
-        return { ok: false, kind: 'no_facilitator', attempts };
-      }
-      throw error;
+      const failure = asFacilitatorError(facilitator.id, 'verify', error);
+      monitor.recordFailure(facilitator.id, failure);
+      attempts.push({ facilitatorId: facilitator.id, stage: 'verify', error: failure });
+      if (failure.isRetryableElsewhere) continue;
+      return { ok: false, kind: 'no_facilitator', attempts };
     }
 
     if (!verify.isValid) {
@@ -78,13 +76,11 @@ export async function verifyAndSettle(
       settle = await facilitator.settle(payload, requirements);
       monitor.recordSuccess(facilitator.id);
     } catch (error) {
-      monitor.recordFailure(facilitator.id, error);
-      if (error instanceof FacilitatorError) {
-        attempts.push({ facilitatorId: facilitator.id, stage: 'settle', error });
-        if (error.isRetryableElsewhere) continue;
-        return { ok: false, kind: 'no_facilitator', attempts };
-      }
-      throw error;
+      const failure = asFacilitatorError(facilitator.id, 'settle', error);
+      monitor.recordFailure(facilitator.id, failure);
+      attempts.push({ facilitatorId: facilitator.id, stage: 'settle', error: failure });
+      if (failure.isRetryableElsewhere) continue;
+      return { ok: false, kind: 'no_facilitator', attempts };
     }
 
     if (!settle.success) {
@@ -95,4 +91,25 @@ export async function verifyAndSettle(
   }
 
   return { ok: false, kind: 'no_facilitator', attempts };
+}
+
+/**
+ * A facilitator adapter is third party code reaching a third party service, so it can throw
+ * anything: a TypeError from an SDK, an AggregateError from a DNS lookup, a string. Letting an
+ * untyped throw escape would turn one misbehaving facilitator into a 500 on the seller's endpoint,
+ * which is a denial of service the buyer did not have to work for. Everything unrecognised is
+ * treated as a transport failure of that one facilitator, so the router moves on.
+ */
+function asFacilitatorError(
+  facilitatorId: string,
+  stage: 'verify' | 'settle',
+  error: unknown,
+): FacilitatorError {
+  if (error instanceof FacilitatorError) return error;
+  const message = error instanceof Error ? error.message : String(error);
+  return new FacilitatorError(
+    'network',
+    facilitatorId,
+    `facilitator ${facilitatorId} threw an unrecognised error during ${stage}: ${message}`,
+  );
 }

@@ -10,6 +10,15 @@ export default defineConfig({
       '@payguard/core': pkg('core'),
       '@payguard/store': pkg('store'),
       '@payguard/rails': pkg('rails'),
+      '@payguard/server/express': fileURLToPath(
+        new URL('./packages/server/src/express.ts', import.meta.url),
+      ),
+      '@payguard/server/hono': fileURLToPath(
+        new URL('./packages/server/src/hono.ts', import.meta.url),
+      ),
+      '@payguard/server/fastify': fileURLToPath(
+        new URL('./packages/server/src/fastify.ts', import.meta.url),
+      ),
       '@payguard/server': pkg('server'),
       '@payguard/client': pkg('client'),
     },

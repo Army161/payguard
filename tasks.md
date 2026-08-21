@@ -1,6 +1,6 @@
 # tasks.md - mirror of build_v1.md checkboxes; agents tick here and log in memory.md
 
-Current phase: 4 complete. Blockers: see BLOCKERS below.
+Current phase: 5 complete. Blockers: see BLOCKERS below.
 
 ## Phase 0 - Repo
 
@@ -35,9 +35,9 @@ Current phase: 4 complete. Blockers: see BLOCKERS below.
 
 ## Phase 5 - @payguard/client
 
-- [ ] Signer interface; dev raw-key signer (prod-disabled); KMS adapter; agentic wallet adapter
-- [ ] Policy + kill switch + router with failover
-- [ ] AT-5, AT-6, AT-7 green
+- [x] Signer interface; dev raw-key signer (prod-disabled); KMS adapter; agentic wallet adapter
+- [x] Policy + kill switch + router with failover
+- [x] AT-5, AT-6, AT-7 green
 
 ## Phase 6 - apps/cli
 

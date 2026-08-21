@@ -104,3 +104,28 @@ Express as a transitive dependency. Callers use payguardContext(request) instead
 2026-08-21 A failing audit webhook is swallowed. The durable append already happened, and FR-5.3
 must not be able to take the payment path down with it. There is a test that a throwing onAudit
 still yields a settled outcome.
+2026-08-21 Phase 5 done. Buyer client, 47 tests. AT-5, AT-6 and AT-7 are green, driven against a
+real Express seller guarded by @payguard/server over a socket rather than against a mock.
+2026-08-21 The Signer interface returns a signed payload and nothing else. It has no method that
+returns a key, a seed or a mnemonic, and no PayGuard code path asks for one. RawKeySigner does not
+even accept a private key: the caller supplies a signing callback and keeps the key in its own
+closure, so no key material ever lives inside a PayGuard object. RawKeySigner throws under
+NODE_ENV=production and refuses mainnet networks outright.
+2026-08-21 RemoteSigner schema validates whatever the backend returns and checks the network
+matches. A signing backend is trusted with the key, not with the protocol; a malformed payload
+from a wallet SDK should fail at the buyer rather than as a confusing 402 at the seller.
+2026-08-21 The kill switch caches its file check for at most one second. A synchronous stat on
+every payment costs latency NFR-2 has a budget for, and the cap is what keeps AT-7's one second
+requirement satisfiable. The clamp has its own test.
+2026-08-21 Two real bugs found by the AT-5 tests, both fixed:
+(a) Seller: a facilitator adapter that threw a plain Error (rather than FacilitatorError)
+escaped verifyAndSettle and became a 500 on the seller's endpoint. Third party adapter code can
+throw anything, so one misbehaving facilitator was a denial of service the buyer got for free.
+Unrecognised throws are now wrapped as a transport failure of that one facilitator and the
+router moves on.
+(b) Buyer: the client treated every non-402 response as a successful payment, so a 500 was
+recorded as a completed spend and returned as success. Now only 2xx is reported as delivered.
+2026-08-21 Deliberate design decision on buyer failover: only an explicit 402 triggers trying
+another rail. A 5xx is ambiguous about whether the payload settled, and paying again on another
+rail after an ambiguous failure is exactly the double charge FR-4.4 forbids. A non-2xx response is
+still recorded as spent, because a spend cap that under-counts is worse than one that over-counts.
