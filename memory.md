@@ -173,3 +173,13 @@ took the payload from 175 MB to 101 MB.
 waiting, against the 30 minute target in spec.md FR-6.2. The 30 second no-account path
 (pnpm install, pnpm build, payguard simulate) is first, so a reader can decide whether to continue
 before creating any account.
+2026-08-21 Gap found by re-reading spec.md against the README: FR-5.3 requires JSONL and CSV export
+and the README claimed it, but it was not implemented. Written now, with `payguard export`.
+JSONL preserves each entry byte-identically to what the hash covers, so a recipient can re-verify
+the chain from the file; CSV flattens for a spreadsheet and therefore cannot be re-verified, and
+the two formats are documented as answering different questions rather than as interchangeable.
+The chain is verified during export, so an operator cannot hand an auditor a tampered file without
+being told, and a partial export says outright that it cannot be verified from its own contents.
+2026-08-21 Added docs/acceptance-tests.md mapping AT-1 to AT-8 to the specific test suites that
+cover each, plus a Definition of Done table with honest status. Docker image build is the one item
+marked not verified, with the reason and the mitigation.

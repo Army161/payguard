@@ -39,6 +39,7 @@ export { humanApprovalRule } from './policy/rules/human-approval.js';
 // Audit
 export * from './audit/entry.js';
 export * from './audit/chain.js';
+export * from './audit/export.js';
 
 // Store contract
 export * from './store/interface.js';

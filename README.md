@@ -125,6 +125,16 @@ const { response, payment } = await client.pay('https://seller.example/api/repor
 
 `touch .payguard-halt` stops every payment within a second, and survives a restart.
 
+## Hand an auditor the log
+
+```bash
+npx payguard export --path ./payguard.sqlite --format jsonl --out audit.jsonl
+```
+
+The chain is verified on the way out, so you cannot hand over a tampered export without being
+told. JSONL preserves each entry exactly as it was hashed, so the recipient can re-verify it; CSV
+flattens for a spreadsheet and therefore cannot be re-verified, which the header says.
+
 ## Audit an endpoint you already run
 
 ```bash
@@ -166,6 +176,7 @@ wallet. PayGuard is not itself a facilitator and does not become one in v1. See
 ## Documentation
 
 - [Quickstart](docs/quickstart.md), timed
+- [Acceptance test traceability](docs/acceptance-tests.md), AT-1 to AT-8 mapped to the tests that cover them
 - [Threat model](docs/threat-model.md)
 - [Compliance posture](docs/compliance-posture.md)
 - [Security policy](SECURITY.md)

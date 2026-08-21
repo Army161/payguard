@@ -15,7 +15,8 @@ import {
   runSimulation,
   startSimulatedSeller,
 } from '../src/index.js';
-import type { PaymentRequirements } from '@payguard/core';
+import { fromJsonl, verifyChain, type PaymentRequirements } from '@payguard/core';
+import { createStore } from '@payguard/store';
 
 const dir = mkdtempSync(join(tmpdir(), 'payguard-cli-'));
 const servers: { close(): void }[] = [];
@@ -291,6 +292,45 @@ describe('the payguard binary', () => {
         stdio: ['ignore', 'pipe', 'pipe'],
       }),
     ).toThrow(/needs an upstream url/);
+  });
+
+  it('exports the audit log as JSONL and CSV and verifies the chain', async () => {
+    const path = join(dir, 'export.sqlite');
+    const store = await createStore({ kind: 'sqlite', path });
+    for (let i = 0; i < 3; i += 1) {
+      await store.appendAudit({
+        requestId: `req-${i}`,
+        agentId: 'agent-1',
+        counterparty: '0xseller',
+        rail: 'base:usdc',
+        network: 'base-sepolia',
+        amount: '10000',
+        asset: '0xusdc',
+        facilitator: 'coinbase',
+        mode: 'strict',
+        stage: 'release',
+        outcome: 'allowed',
+        reason: null,
+        message: i === 1 ? 'released, with a comma' : 'released',
+        transactionHash: '0xabc',
+        paymentId: 'a'.repeat(64),
+        timestampMs: 1_700_000_000_000 + i,
+      });
+    }
+    await store.close();
+
+    const jsonl = execFileSync(process.execPath, [bin, 'export', '--path', path], {
+      encoding: 'utf8',
+    });
+    const entries = fromJsonl(jsonl);
+    expect(entries).toHaveLength(3);
+    expect(verifyChain(entries)).toEqual({ ok: true, length: 3 });
+
+    const csv = execFileSync(process.execPath, [bin, 'export', '--path', path, '--format', 'csv'], {
+      encoding: 'utf8',
+    });
+    expect(csv.trimEnd().split('\n')).toHaveLength(4);
+    expect(csv).toContain('"released, with a comma"');
   });
 
   it('prints its version', () => {

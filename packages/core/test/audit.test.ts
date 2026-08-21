@@ -3,7 +3,10 @@ import {
   AuditEntrySchema,
   GENESIS_HASH,
   appendEntry,
+  fromJsonl,
   hashEntry,
+  toCsv,
+  toJsonl,
   verifyChain,
   type AuditBody,
   type AuditEntry,
@@ -114,5 +117,54 @@ describe('tamper evidence, AT-8', () => {
     // A sparse array is what a partial read from a broken exporter looks like.
     delete (entries as unknown as (AuditEntry | undefined)[])[1];
     expect(verifyChain(entries)).toEqual({ ok: false, brokenAt: 1, reason: 'bad_sequence' });
+  });
+});
+
+describe('audit export, FR-5.3', () => {
+  it('round trips through JSONL with the chain still verifiable', () => {
+    const entries = chainOf(4);
+    const restored = fromJsonl(toJsonl(entries));
+    expect(restored).toEqual(entries);
+    expect(verifyChain(restored)).toEqual({ ok: true, length: 4 });
+  });
+
+  it('emits one line per entry and nothing for an empty chain', () => {
+    expect(toJsonl(chainOf(3)).trimEnd().split('\n')).toHaveLength(3);
+    expect(toJsonl([])).toBe('');
+  });
+
+  it('detects tampering after a JSONL round trip, which is the point of exporting it', () => {
+    const text = toJsonl(chainOf(3)).replace('"amount":"10000"', '"amount":"1"');
+    expect(verifyChain(fromJsonl(text)).ok).toBe(false);
+  });
+
+  it('emits a CSV header naming every column', () => {
+    const [header] = toCsv(chainOf(1)).split('\n');
+    expect(header).toContain('seq,timestampMs,requestId');
+    expect(header).toContain('prevHash,hash');
+  });
+
+  it('emits one CSV row per entry', () => {
+    expect(toCsv(chainOf(3)).trimEnd().split('\n')).toHaveLength(4);
+    expect(toCsv([]).trim()).toBe(
+      'seq,timestampMs,requestId,agentId,counterparty,rail,network,asset,amount,facilitator,mode,stage,outcome,reason,message,transactionHash,paymentId,prevHash,hash',
+    );
+  });
+
+  it('renders a null field as an empty cell rather than the string null', () => {
+    const entry = appendEntry(null, body({ agentId: null, reason: null }));
+    const [, row] = toCsv([entry]).split('\n');
+    expect(row?.split(',')[3]).toBe('');
+  });
+
+  it('quotes a value containing a comma, a quote, or a newline', () => {
+    const entry = appendEntry(null, body({ message: 'refused, because "x"\nsee log' }));
+    const csv = toCsv([entry]);
+    expect(csv).toContain('"refused, because ""x""\nsee log"');
+  });
+
+  it('does not quote a value that needs no quoting', () => {
+    const entry = appendEntry(null, body({ message: 'released' }));
+    expect(toCsv([entry])).toContain(',released,');
   });
 });

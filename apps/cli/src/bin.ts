@@ -6,6 +6,8 @@ import { renderConfig, renderEnvExample } from './commands/init.js';
 import { runAudit, renderMarkdown, renderText } from './commands/audit.js';
 import { renderSimulation, runSimulation, startSimulatedSeller } from './commands/simulate.js';
 import { createProxy } from '@payguard/server';
+import { createStore } from '@payguard/store';
+import { toCsv, toJsonl, verifyChain } from '@payguard/core';
 
 const program = new Command();
 
@@ -80,6 +82,67 @@ program
     // so inconclusive gets its own exit code rather than sharing zero with a genuine pass.
     process.exitCode = report.summary.vulnerable > 0 ? 1 : report.summary.inconclusive > 0 ? 2 : 0;
   });
+
+program
+  .command('export')
+  .description('Export the audit log as JSONL or CSV, and verify the hash chain while doing it')
+  .option('--store <kind>', 'sqlite or redis', 'sqlite')
+  .option('--path <path>', 'sqlite file path', './payguard.sqlite')
+  .option('--url <url>', 'redis connection url')
+  .option('--format <format>', 'jsonl or csv', 'jsonl')
+  .option('--out <path>', 'write to this file instead of stdout')
+  .option('--from <seq>', 'start at this sequence number', '0')
+  .action(
+    async (options: {
+      store: string;
+      path: string;
+      url?: string;
+      format: string;
+      out?: string;
+      from: string;
+    }) => {
+      const store =
+        options.store === 'redis'
+          ? await createStore({
+              kind: 'redis',
+              url: options.url ?? process.env.REDIS_URL ?? 'redis://localhost:6379',
+              keyPrefix: 'payguard:',
+            })
+          : await createStore({ kind: 'sqlite', path: options.path });
+
+      try {
+        const entries = await store.readAudit({ fromSeq: Number(options.from) });
+
+        // Verifying on the way out means an operator cannot hand an auditor a tampered export
+        // without being told. A partial export (--from) cannot be verified from its own contents,
+        // because the chain before it is missing, and the message says so rather than staying
+        // silent.
+        if (Number(options.from) === 0) {
+          const verification = verifyChain(entries);
+          if (!verification.ok) {
+            console.error(
+              `audit chain is broken at entry ${verification.brokenAt} (${verification.reason}); exporting anyway so you have the evidence`,
+            );
+            process.exitCode = 1;
+          }
+        } else {
+          console.error(
+            'note: a partial export starting mid-chain cannot be verified from its own contents',
+          );
+        }
+
+        const rendered = options.format === 'csv' ? toCsv(entries) : toJsonl(entries);
+        if (options.out === undefined) {
+          process.stdout.write(rendered);
+        } else {
+          writeFileSync(options.out, rendered);
+          console.error(`wrote ${entries.length} entries to ${options.out}`);
+        }
+      } finally {
+        await store.close();
+      }
+    },
+  );
 
 program
   .command('protect')
