@@ -1,0 +1,22 @@
+
+> @payguard/rails@0.1.0 test /home/ubuntu/payguard-project/packages/rails
+> vitest run
+
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90m/home/ubuntu/payguard-project/packages/rails[39m
+
+[?25l [32m✓[39m [2msrc/[22mrails[2m.test.ts[22m[2m (2)[22m
+   [32m✓[39m Rails[2m (2)[22m
+     [32m✓[39m should initialize BaseUSDCRail
+     [32m✓[39m should initialize CoinbaseFacilitator
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2msrc/[22mrails[2m.test.ts[22m[2m (2)[22m
+   [32m✓[39m Rails[2m (2)[22m
+     [32m✓[39m should initialize BaseUSDCRail
+     [32m✓[39m should initialize CoinbaseFacilitator
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 05:44:56
+[2m   Duration [22m 1.19s[2m (transform 51ms, setup 0ms, collect 591ms, tests 6ms, environment 0ms, prepare 98ms)[22m
+
+[?25h[?25h

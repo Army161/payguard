@@ -1,0 +1,23 @@
+
+> @payguard/server@0.1.0 test /home/ubuntu/payguard-project/packages/server
+> vitest run
+
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90m/home/ubuntu/payguard-project/packages/server[39m
+
+[?25l [90m·[39m [2msrc/[22mserver[2m.test.ts[22m[2m (1)[22m
+   [90m·[39m Express Middleware[2m (1)[22m
+     [90m·[39m should return 402 if PAYMENT header is missing
+[?25l[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2msrc/[22mserver[2m.test.ts[22m[2m (1)[22m
+   [32m✓[39m Express Middleware[2m (1)[22m
+     [32m✓[39m should return 402 if PAYMENT header is missing
+[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2msrc/[22mserver[2m.test.ts[22m[2m (1)[22m
+   [32m✓[39m Express Middleware[2m (1)[22m
+     [32m✓[39m should return 402 if PAYMENT header is missing
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m   Start at [22m 05:45:00
+[2m   Duration [22m 740ms[2m (transform 96ms, setup 0ms, collect 185ms, tests 15ms, environment 0ms, prepare 130ms)[22m
+
+[?25h[?25h

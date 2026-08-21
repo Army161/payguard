@@ -1,0 +1,25 @@
+{
+  "name": "@payguard/rails",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "lint": "eslint src/**/*.ts"
+  },
+  "dependencies": {
+    "@payguard/core": "workspace:*",
+    "viem": "^2.7.9",
+    "xrpl": "^3.0.0",
+    "@coinbase/x402": "^2.1.0",
+    "@x402/core": "^2.23.0",
+    "@x402/evm": "^2.23.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.1"
+  }
+}

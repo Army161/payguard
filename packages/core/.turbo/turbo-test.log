@@ -1,0 +1,29 @@
+
+> @payguard/core@0.1.0 test /home/ubuntu/payguard-project/packages/core
+> vitest run
+
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90m/home/ubuntu/payguard-project/packages/core[39m
+
+[?25l [90m·[39m [2msrc/[22mpolicy[2m.test.ts[22m[2m (3)[22m
+   [90m·[39m PolicyEngine Property Tests[2m (3)[22m
+     [90m·[39m should always deny if amount exceeds maxPerTx
+     [90m·[39m should deny if daily cap is exceeded
+     [90m·[39m should allow if all conditions are met
+[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2msrc/[22mpolicy[2m.test.ts[22m[2m (3)[22m
+   [32m✓[39m PolicyEngine Property Tests[2m (3)[22m
+     [32m✓[39m should always deny if amount exceeds maxPerTx
+     [32m✓[39m should deny if daily cap is exceeded
+     [32m✓[39m should allow if all conditions are met
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2msrc/[22mpolicy[2m.test.ts[22m[2m (3)[22m
+   [32m✓[39m PolicyEngine Property Tests[2m (3)[22m
+     [32m✓[39m should always deny if amount exceeds maxPerTx
+     [32m✓[39m should deny if daily cap is exceeded
+     [32m✓[39m should allow if all conditions are met
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 05:44:50
+[2m   Duration [22m 1.09s[2m (transform 91ms, setup 0ms, collect 274ms, tests 36ms, environment 0ms, prepare 127ms)[22m
+
+[?25h[?25h

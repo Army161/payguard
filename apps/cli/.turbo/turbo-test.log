@@ -1,0 +1,17 @@
+
+> payguard-cli@0.1.0 test /home/ubuntu/payguard-project/apps/cli
+> vitest run
+
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90m/home/ubuntu/payguard-project/apps/cli[39m
+
+ [32m✓[39m [2msrc/[22mcli[2m.test.ts[22m[2m (1)[22m
+   [32m✓[39m CLI[2m (1)[22m
+     [32m✓[39m should have a version
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m   Start at [22m 05:45:03
+[2m   Duration [22m 453ms[2m (transform 36ms, setup 0ms, collect 30ms, tests 2ms, environment 0ms, prepare 85ms)[22m
+
+[?25h

@@ -1,0 +1,24 @@
+
+> @payguard/store@0.1.0 test /home/ubuntu/payguard-project/packages/store
+> vitest run
+
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90m/home/ubuntu/payguard-project/packages/store[39m
+
+[?25l [32m✓[39m [2msrc/[22mstore[2m.test.ts[22m[2m (3)[22m
+   [32m✓[39m Store Contract Tests (SQLite)[2m (3)[22m
+     [32m✓[39m should claim a nonce once
+     [32m✓[39m should handle idempotency
+     [32m✓[39m should append and retrieve audit logs
+[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2msrc/[22mstore[2m.test.ts[22m[2m (3)[22m
+   [32m✓[39m Store Contract Tests (SQLite)[2m (3)[22m
+     [32m✓[39m should claim a nonce once
+     [32m✓[39m should handle idempotency
+     [32m✓[39m should append and retrieve audit logs
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 05:44:54
+[2m   Duration [22m 754ms[2m (transform 60ms, setup 0ms, collect 72ms, tests 9ms, environment 0ms, prepare 127ms)[22m
+
+[?25h[?25h
