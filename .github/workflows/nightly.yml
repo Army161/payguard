@@ -23,11 +23,16 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Live rail verification against public testnets
+        # The suite distinguishes three outcomes: pass (the chain answered and the rail decoded it
+        # correctly), skip (the public endpoint was unhealthy or rate limited, with the reason
+        # printed), and fail (the rail read real chain data and got it wrong). Only the third is
+        # a red build, because a nightly that cries wolf at every upstream hiccup stops being read.
         run: pnpm run test:live
         env:
           PAYGUARD_LIVE: '1'
-          BASE_RPC_URL: ${{ vars.BASE_RPC_URL || 'https://sepolia.base.org' }}
-          XRPL_WSS_URL: ${{ vars.XRPL_WSS_URL || 'wss://s.altnet.rippletest.net:51233' }}
-          # Set XRPL_RPC_URL as a repository variable to run the XRPL live tests over JSON-RPC
-          # instead, for runners whose egress policy allows https only.
+          # All optional. Left unset, the suite tries a built-in list of public endpoints and
+          # falls back between them.
+          BASE_RPC_URL: ${{ vars.BASE_RPC_URL }}
+          XRPL_WSS_URL: ${{ vars.XRPL_WSS_URL }}
+          # Set this for runners whose egress policy allows https only.
           XRPL_RPC_URL: ${{ vars.XRPL_RPC_URL }}

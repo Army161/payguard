@@ -183,3 +183,25 @@ being told, and a partial export says outright that it cannot be verified from i
 2026-08-21 Added docs/acceptance-tests.md mapping AT-1 to AT-8 to the specific test suites that
 cover each, plus a Definition of Done table with honest status. Docker image build is the one item
 marked not verified, with the reason and the mitigation.
+2026-08-21 Live suite hardened after it went red on a re-run. Two separate environmental causes,
+neither a code defect, and the first design was wrong to treat them as failures:
+(a) The pinned XRPL transaction started returning txnNotFound. XRPL public nodes retain only
+recent ledgers, so any pinned hash rots within days. Fixed by discovering a settled transaction
+at run time: scan a few recent validated ledgers for a successful native Payment, and if the net
+is quiet, fund a throwaway account from the free Testnet faucet, which is itself an ordinary
+Payment. The faucet also returns a seed; it is deliberately not read, not stored and not
+returned, and there is a comment saying so.
+(b) `sepolia.base.org` answered "no backend is currently healthy to serve traffic", and
+`testnet.xrpl-labs.com` answered 418 because the first discovery loop scanned twelve expanded
+ledgers and rate limited itself. Fixed with an endpoint fallback list, backoff, a much shallower
+scan, and polite delays.
+2026-08-21 The important design change: the live suite now has three outcomes rather than two.
+Pass means the chain answered and the rail decoded it correctly. Skip means the public endpoint
+was unhealthy or rate limited, printed with the reason. Fail means the rail read real chain data
+and got it wrong. Collapsing the middle case into a failure is how a nightly suite becomes noise
+nobody reads, and a suite nobody reads catches nothing.
+2026-08-21 A beforeAll that throws makes vitest skip the entire suite silently, which is exactly
+the failure mode this file exists to avoid. Both beforeAll blocks now catch everything and record
+a reason that each test turns into an explicit skip. Verified both paths: all eight pass against
+real testnets, and with a deliberately unreachable endpoint the XRPL tests skip with the reason
+visible while Base falls back to a healthy public RPC and still passes.
