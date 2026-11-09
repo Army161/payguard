@@ -23,7 +23,8 @@ jobs:
           version: 10.33.0
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # better-sqlite3 13 requires Node 22; on Node 20 the SQLite test workers crash.
+          node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       # The CLI tests run the built binary at apps/cli/dist/bin.js, so build before testing.
